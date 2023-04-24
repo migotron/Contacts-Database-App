@@ -133,7 +133,31 @@ def update_contact():
 
 def delete_contact():
 # Function to delete a contact from the database
+    print("--------------------------------")
     print("Delete a contact...")
+    print("--------------------------------")
+    
+    name = input("Enter name of contact to delete: ")
+
+    c.execute("SELECT * FROM contacts WHERE first_name LIKE ? OR last_name LIKE ?", ('%' + name + '%', '%' + name + '%'))
+    results = c.fetchall()
+
+    if len(results) == 0:
+        print("No matching contacts found.")
+    elif len(results) > 1:
+        print("Multiple matching contacts found:")
+        for row in results:
+            print(row)
+
+        contact_id = input("Enter ID of contact to delete: ")
+    else:
+        contact_id = results[0][0]
+
+    # delete contact
+    c.execute("DELETE FROM contacts WHERE id = ?", (contact_id,))
+
+    print("Contact deleted successfully!")
+    conn.commit()
 
 
 def view_all_contacts():
