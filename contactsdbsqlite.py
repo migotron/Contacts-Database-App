@@ -22,7 +22,41 @@ c = conn.cursor()
 
 def add_contact():
 # Function to add contact to the database
+    print("--------------------------------")
     print("Add a new contact...")
+    print("--------------------------------")
+
+    first_name = input("Enter contact's first name: ")
+    while(not first_name.isalpha()): # Verify first name is alphabetic characters only
+        print("Invalid input. First name should be letters only.")
+        first_name = input("Enter contact's first name: ")
+
+    last_name = input(f"Enter {first_name}'s last name: ")
+    while(not last_name.isalpha()): # Verify last name is alphabetic characters only
+        print("Invalid input. Last name should be letters only.")
+        last_name = input(f"Enter {first_name}'s last name: ")
+
+    phone_number = input("Enter {}'s phone number: ".format(first_name))
+    while(not phone_number.isdigit()): # Verify phone number is digits only
+        print("Invalid input. Phone numbers should be digits only.")
+        phone_number = input("Enter {}'s phone number: ".format(first_name))
+
+    email = input("Enter %s's email: " % first_name)
+    while('@' not in email or '.' not in email): # Verify email address has both @ and . characters
+        print("Invalid input. Email should have both an '@' and a '.'")
+        email = input("Enter %s's email: " % first_name)
+
+    # Perform SQL query to add the new contact into the database
+    c.execute("INSERT INTO contacts (first_name, last_name, phone_number, email) VALUES (?,?,?,?)",
+              (first_name, last_name, phone_number, email))
+    
+    # Print success message
+    print("--------------------------------")
+    print("Contact added successfully!")
+    print("--------------------------------")
+
+    # Commit the changes to connection database
+    conn.commit()
 
 
 def update_contact():
@@ -51,19 +85,19 @@ def main():
 
         user_choice = input("Enter choice: ")
 
-        if user_choice == 1:
+        if user_choice == "1":
             add_contact()
-        elif user_choice == 2:
+        elif user_choice == "2":
             update_contact()
-        elif user_choice == 3:
+        elif user_choice == "3":
             delete_contact()
-        elif user_choice == 4:
+        elif user_choice == "4":
             view_all_contacts()
-        elif user_choice == 5:
+        elif user_choice == "5":
             print("Exiting program...")
             break
         else:
-            print("Invalid choice: %d" % user_choice)
+            print("Invalid choice: %s" % user_choice)
             print("Please try again!")
 
 
