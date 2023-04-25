@@ -1,3 +1,4 @@
+# Author: Miguel Ibarra【=◈︿◈=】
 import os
 import sqlite3
 
@@ -98,25 +99,25 @@ def update_contact():
 
         if choice == "1":
             first_name = input("Enter new first name: ")
-            while not first_name.isalpha():
+            while not first_name.isalpha(): # Verify first name is alphabetic characters only
                 print("Invalid input. First name should be letters only.")
                 first_name = input("Enter new first name: ")
             c.execute("UPDATE contacts SET first_name = ? WHERE id = ?", (first_name, contact_id))
         elif choice == "2":
             last_name = input("Enter new last name: ")
-            while not last_name.isalpha():
+            while not last_name.isalpha(): # Verify last name is alphabetic characters only
                 print("Invalid input. Last name should be letters only.")
                 last_name = input("Enter new last name: ")
             c.execute("UPDATE contacts SET last_name = ? WHERE id = ?", (last_name, contact_id))
         elif choice == "3":
             phone_number = input("Enter new phone number: ")
-            while not phone_number.isdigit():
+            while not phone_number.isdigit(): # Verify phone number is digits only
                 print("Invalid input. Phone numbers should be digits only.")
                 phone_number = input("Enter new phone number: ")
             c.execute("UPDATE contacts SET phone_number = ? WHERE id = ?", (phone_number, contact_id))
         elif choice == "4":
             email = input("Enter new email: ")
-            while not ('@' in email and '.' in email):
+            while not ('@' in email and '.' in email): # Verify email address has both @ and . characters
                 print("Invalid input. Email should have both an '@' and a '.'")
                 email = input("Enter new email: ")
             c.execute("UPDATE contacts SET email = ? WHERE id = ?", (email, contact_id))
@@ -138,7 +139,7 @@ def delete_contact():
     print("--------------------------------")
     
     name = input("Enter name of contact to delete: ")
-
+    # SQL query for searching the name in contact database
     c.execute("SELECT * FROM contacts WHERE first_name LIKE ? OR last_name LIKE ?", ('%' + name + '%', '%' + name + '%'))
     results = c.fetchall()
 
@@ -147,13 +148,12 @@ def delete_contact():
     elif len(results) > 1:
         print("Multiple matching contacts found:")
         for row in results:
-            print(row)
-
+            print(row)    
         contact_id = input("Enter ID of contact to delete: ")
     else:
         contact_id = results[0][0]
 
-    # delete contact
+    # SQL query to delete contact from the database
     c.execute("DELETE FROM contacts WHERE id = ?", (contact_id,))
 
     print("Contact deleted successfully!")
@@ -162,7 +162,19 @@ def delete_contact():
 
 def view_all_contacts():
 # Function to view all contacts in the database
+    print("--------------------------------")
     print("View all contacts...")
+    print("--------------------------------")
+    
+    # SQL query for searching all contacts in contact database
+    c.execute("SELECT * FROM contacts")
+    results = c.fetchall()
+    
+    if len(results) == 0:
+        print("No contacts found.")
+    else:
+        for row in results:
+            print(row)
 
 
 def main():
